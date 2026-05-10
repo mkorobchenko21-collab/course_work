@@ -1,0 +1,27 @@
+{
+  "Name": "antonims",
+  "Cards": [
+    {
+      "Term": "1",
+      "Definition": "2",
+      "IsLearned": false
+    },
+    {
+      "Term": "3",
+      "Definition": "4",
+      "IsLearned": false
+    },
+    {
+      "Term": "white",
+      "Definition": "black",
+      "IsLearned": false
+    },
+    {
+      "Term": "sky",
+      "Definition": "ground",
+      "IsLearned": false
+    }
+  ],
+  "TotalCards": 4,
+  "LearnedCards": 0
+}

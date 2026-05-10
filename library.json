@@ -1,0 +1,241 @@
+{
+  "Folders": [
+    {
+      "Name": "hello",
+      "Decks": [
+        {
+          "Name": "sdafasf",
+          "Cards": [
+            {
+              "Term": "New Term",
+              "Definition": "New Definition",
+              "IsLearned": false
+            },
+            {
+              "Term": "New Term2",
+              "Definition": "New Definition2",
+              "IsLearned": false
+            },
+            {
+              "Term": "New Term3",
+              "Definition": "New Definition3",
+              "IsLearned": false
+            },
+            {
+              "Term": "Ne213",
+              "Definition": "New4235r234",
+              "IsLearned": false
+            },
+            {
+              "Term": "New Term",
+              "Definition": "New Definition",
+              "IsLearned": false
+            },
+            {
+              "Term": "New Term2",
+              "Definition": "New Definition2",
+              "IsLearned": false
+            },
+            {
+              "Term": "New Term3",
+              "Definition": "New Definition3",
+              "IsLearned": false
+            }
+          ],
+          "TotalCards": 7,
+          "LearnedCards": 0
+        }
+      ]
+    },
+    {
+      "Name": "English",
+      "Decks": [
+        {
+          "Name": "antonims",
+          "Cards": [
+            {
+              "Term": "1",
+              "Definition": "2",
+              "IsLearned": false
+            },
+            {
+              "Term": "3",
+              "Definition": "4",
+              "IsLearned": false
+            },
+            {
+              "Term": "white",
+              "Definition": "black",
+              "IsLearned": false
+            },
+            {
+              "Term": "sky",
+              "Definition": "ground",
+              "IsLearned": false
+            },
+            {
+              "Term": "1",
+              "Definition": "2",
+              "IsLearned": false
+            },
+            {
+              "Term": "3",
+              "Definition": "4",
+              "IsLearned": false
+            },
+            {
+              "Term": "white",
+              "Definition": "black",
+              "IsLearned": false
+            },
+            {
+              "Term": "sky",
+              "Definition": "ground",
+              "IsLearned": false
+            }
+          ],
+          "TotalCards": 8,
+          "LearnedCards": 0
+        },
+        {
+          "Name": "basics",
+          "Cards": [
+            {
+              "Term": "Apple",
+              "Definition": "A round fruit with red, green, or yellow skin and a white inside.",
+              "IsLearned": false
+            },
+            {
+              "Term": "Book",
+              "Definition": "A set of printed pages that are fastened together inside a cover.",
+              "IsLearned": false
+            },
+            {
+              "Term": "Cat",
+              "Definition": "A small animal with fur, four legs, a tail, and claws.",
+              "IsLearned": false
+            },
+            {
+              "Term": "Dog",
+              "Definition": "A common animal with four legs and fur, often kept as a pet.",
+              "IsLearned": false
+            },
+            {
+              "Term": "Eat",
+              "Definition": "To put food into your mouth and swallow it.",
+              "IsLearned": false
+            },
+            {
+              "Term": "Friend",
+              "Definition": "A person who you know well and who you like a lot.",
+              "IsLearned": false
+            },
+            {
+              "Term": "Good",
+              "Definition": "High quality, or of a standard that is acceptable.",
+              "IsLearned": false
+            },
+            {
+              "Term": "Happy",
+              "Definition": "Feeling or showing pleasure or contentment.",
+              "IsLearned": false
+            },
+            {
+              "Term": "Ice",
+              "Definition": "Water that has frozen and become solid.",
+              "IsLearned": false
+            },
+            {
+              "Term": "Jump",
+              "Definition": "To push yourself off the ground using your legs.",
+              "IsLearned": false
+            },
+            {
+              "Term": "Kind",
+              "Definition": "Generous, helpful, and thinking about other people\u0027s feelings.",
+              "IsLearned": false
+            },
+            {
+              "Term": "Love",
+              "Definition": "To like someone or something very much.",
+              "IsLearned": false
+            },
+            {
+              "Term": "Mountain",
+              "Definition": "A very high hill, often with rocks near the top.",
+              "IsLearned": false
+            },
+            {
+              "Term": "New",
+              "Definition": "Recently created or having started to exist recently.",
+              "IsLearned": false
+            },
+            {
+              "Term": "Ocean",
+              "Definition": "A very large area of sea.",
+              "IsLearned": false
+            },
+            {
+              "Term": "Play",
+              "Definition": "To take part in games or activities for enjoyment.",
+              "IsLearned": false
+            },
+            {
+              "Term": "Quiet",
+              "Definition": "Making very little or no noise.",
+              "IsLearned": false
+            },
+            {
+              "Term": "Run",
+              "Definition": "To move along, faster than walking, by taking quick steps.",
+              "IsLearned": false
+            },
+            {
+              "Term": "Sun",
+              "Definition": "The star that provides light and heat to the Earth.",
+              "IsLearned": false
+            },
+            {
+              "Term": "Tree",
+              "Definition": "A tall plant with a thick wooden stem and branches.",
+              "IsLearned": false
+            },
+            {
+              "Term": "Under",
+              "Definition": "Below or at a lower level than something.",
+              "IsLearned": false
+            },
+            {
+              "Term": "Voice",
+              "Definition": "The sound produced by humans when speaking or singing.",
+              "IsLearned": false
+            },
+            {
+              "Term": "Water",
+              "Definition": "A clear liquid, without color or taste, that falls from the sky as rain.",
+              "IsLearned": false
+            },
+            {
+              "Term": "Xylophone",
+              "Definition": "A musical instrument made of wooden bars that you hit with a stick.",
+              "IsLearned": false
+            },
+            {
+              "Term": "Young",
+              "Definition": "Having lived or existed for only a short time.",
+              "IsLearned": false
+            },
+            {
+              "Term": "Zebra",
+              "Definition": "An African wild animal like a horse with black and white stripes.",
+              "IsLearned": false
+            }
+          ],
+          "TotalCards": 26,
+          "LearnedCards": 0
+        }
+      ]
+    }
+  ],
+  "StandaloneDecks": []
+}

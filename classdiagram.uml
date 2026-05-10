@@ -1,0 +1,95 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+' --- Models ---
+class Card {
+    + String Term
+    + String Definition
+    + Boolean IsLearned
+}
+
+class Deck {
+    + String Name
+    + List<Card> Cards
+    + Int TotalCards
+    + Int LearnedCards
+    + void AddCard(Card card)
+    + void RemoveCard(Card card)
+    + void EditCard(Card oldCard, Card newCard)
+    + void Shuffle()
+}
+
+class Folder {
+    + String Name
+    + List<Deck> Decks
+    + void AddDeck(Deck deck)
+    + void RemoveDeck(Deck deck)
+}
+
+' --- Services ---
+interface IStorageManager {
+    + void SaveLibrary(List<Folder> folders, String destinationPath)
+    + List<Folder> LoadLibrary(String sourcePath)
+    + void ExportDeck(Deck deck, String destinationPath)
+    + Deck ImportDeck(String sourcePath)
+    + Deck ParseDeckFromString(String rawText, String termSeparator, String cardSeparator)
+    + String FormatDeckToString(Deck deck, String termSeparator, String cardSeparator)
+}
+
+class StorageManager {
+    - JsonSerializerOptions _jsonOptions
+    + void SaveLibrary(List<Folder> folders, String destinationPath)
+    + List<Folder> LoadLibrary(String sourcePath)
+    + void ExportDeck(Deck deck, String destinationPath)
+    + Deck ImportDeck(String sourcePath)
+    + Deck ParseDeckFromString(String rawText, String termSeparator, String cardSeparator)
+    + String FormatDeckToString(Deck deck, String termSeparator, String cardSeparator)
+}
+
+' --- Logic ---
+class StudySession {
+    - Deck currentDeck
+    - List<Card> sessionCards
+    + Card GetNextCard()
+    + void SwipeLeft(Card card)
+    + void SwipeRight(Card card)
+}
+
+class QuizSession {
+    - Deck currentDeck
+    - int correctAnswers
+    - int totalQuestions
+    + void GenerateQuiz()
+    + Boolean CheckAnswer(Card card, String answer)
+    + String CalculateResults()
+}
+
+' --- UI ---
+class MainWindow {
+    - Deck? _selectedDeck
+    - StudySession? _studySession
+    - QuizSession? _quizSession
+    - IStorageManager _storage
+    + MainWindow()
+    - ShowPanel(Control panelToShow)
+    - PopulateSidebar()
+}
+
+' --- Relationships ---
+Folder "1" *-- "*" Deck : contains
+Deck "1" *-- "*" Card : contains
+
+IStorageManager <|.. StorageManager : implements
+IStorageManager ..> Folder : serializes
+IStorageManager ..> Deck : imports/exports
+
+StudySession --> Deck : uses
+QuizSession --> Deck : uses
+
+' UI Dependencies (MainWindow is the entry point orchestrating everything)
+MainWindow --> IStorageManager : depends on
+MainWindow --> StudySession : creates/uses
+MainWindow --> QuizSession : creates/uses
+MainWindow --> Deck : displays
+
+@enduml

@@ -1,0 +1,27 @@
+{
+  "Name": "sdafasf",
+  "Cards": [
+    {
+      "Term": "New Term",
+      "Definition": "New Definition",
+      "IsLearned": true
+    },
+    {
+      "Term": "New Term2",
+      "Definition": "New Definition2",
+      "IsLearned": true
+    },
+    {
+      "Term": "New Term3",
+      "Definition": "New Definition3",
+      "IsLearned": true
+    },
+    {
+      "Term": "Ne213",
+      "Definition": "New4235r234",
+      "IsLearned": true
+    }
+  ],
+  "TotalCards": 4,
+  "LearnedCards": 4
+}

@@ -1,0 +1,26 @@
+# --- Build Artifacts ---
+bin/
+obj/
+
+# --- User-specific files ---
+*.user
+*.userosscache
+*.sln.docstates
+
+# --- IDE files ---
+.vs/
+.vscode/
+*.swp
+*.swo
+
+# --- Operating System Files ---
+.DS_Store
+Thumbs.db
+
+# --- Crash Dumps (Important!) ---
+core.*
+
+# --- Optional: Data ---
+# If you want to backup your cards, DO NOT ignore library.json.
+# If you want a clean repo without personal data, uncomment the line below:
+# library.json

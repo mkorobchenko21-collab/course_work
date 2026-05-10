@@ -1,0 +1,82 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="FlashcardsApp.ImportExportWindow"
+        Title="Import / Export Utility" 
+        Width="500" Height="650"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        Background="#FDFDFD">
+
+    <Grid RowDefinitions="Auto, *, Auto" Margin="20">
+        <!-- TOP: STATUS MESSAGE -->
+        <Border Grid.Row="0" Margin="0,0,0,15" MinHeight="25">
+            <TextBlock x:Name="StatusMessage" 
+                       Text="Ready" 
+                       HorizontalAlignment="Center" 
+                       VerticalAlignment="Center"
+                       Foreground="#7F8C8D" 
+                       FontWeight="Bold" 
+                       TextWrapping="Wrap" 
+                       TextAlignment="Center"/>
+        </Border>
+
+        <ScrollViewer Grid.Row="1">
+            <StackPanel Spacing="25">
+                
+                <!-- 1. TEXT IMPORT/EXPORT SECTION -->
+                <Border BorderBrush="#EEE" BorderThickness="1" CornerRadius="8" Padding="15" Background="White">
+                    <StackPanel Spacing="15">
+                        <TextBlock Text="TEXT DATA EXCHANGE" FontWeight="Bold" FontSize="14" Foreground="#2C3E50"/>
+                        
+                        <TextBlock Text="Use any character as separator (e.g. -, |, ;). Support for \n (newline) and \t (tab) is included." 
+                                   FontSize="11" Foreground="#7F8C8D" TextWrapping="Wrap"/>
+                        
+                        <Grid ColumnDefinitions="*, *" Margin="0,5">
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="Term Separator" FontSize="10" FontWeight="Bold" Foreground="#95A5A6" Margin="0,0,0,5"/>
+                                <TextBox x:Name="TermSeparatorInput" Text="-" HorizontalContentAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                <TextBlock Text="Card Separator" FontSize="10" FontWeight="Bold" Foreground="#95A5A6" Margin="0,0,0,5"/>
+                                <TextBox x:Name="CardSeparatorInput" Text=";" HorizontalContentAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <TextBox x:Name="DataBuffer" 
+                                 Height="150" 
+                                 AcceptsReturn="True" 
+                                 TextWrapping="Wrap" 
+                                 PlaceholderText="Paste cards here or click Export to see current deck data..."
+                                 FontSize="12"
+                                 FontFamily="Monospace"/>
+
+                        <Grid ColumnDefinitions="*, *">
+                            <Button Grid.Column="0" Content="Export to Text" Click="ExportToText_Click" Margin="0,0,5,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Background="#3498DB" Foreground="White" FontWeight="SemiBold"/>
+                            <Button Grid.Column="1" Content="Import from Text" Click="ImportFromText_Click" Margin="5,0,0,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Background="#2ECC71" Foreground="White" FontWeight="SemiBold"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- 2. JSON IMPORT/EXPORT SECTION -->
+                <Border BorderBrush="#EEE" BorderThickness="1" CornerRadius="8" Padding="15" Background="White">
+                    <StackPanel Spacing="15">
+                        <TextBlock Text="JSON FILE OPERATIONS" FontWeight="Bold" FontSize="14" Foreground="#2C3E50"/>
+                        
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="JSON File Path:" FontSize="10" FontWeight="Bold" Foreground="#95A5A6"/>
+                            <TextBox x:Name="FilePathInput" Text="./Data/MyDeck.json" FontSize="12" FontFamily="Monospace"/>
+                        </StackPanel>
+
+                        <Grid ColumnDefinitions="*, *">
+                            <Button Grid.Column="0" Content="Export to JSON" Click="ExportToJson_Click" Margin="0,0,5,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Background="#9B59B6" Foreground="White" FontWeight="SemiBold"/>
+                            <Button Grid.Column="1" Content="Import from JSON" Click="ImportFromJson_Click" Margin="5,0,0,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Background="#9B59B6" Foreground="White" FontWeight="SemiBold"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- 3. BOTTOM ACTION -->
+        <Button Grid.Row="2" Content="Close" Click="Close_Click" HorizontalAlignment="Right" Width="100" Height="35" Margin="0,15,0,0" Background="#95A5A6" Foreground="White" CornerRadius="4" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+    </Grid>
+</Window>
