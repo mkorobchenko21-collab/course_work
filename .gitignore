@@ -6,6 +6,7 @@ obj/
 *.user
 *.userosscache
 *.sln.docstates
+*.md
 
 # --- IDE files ---
 .vs/
@@ -19,8 +20,3 @@ Thumbs.db
 
 # --- Crash Dumps (Important!) ---
 core.*
-
-# --- Optional: Data ---
-# If you want to backup your cards, DO NOT ignore library.json.
-# If you want a clean repo without personal data, uncomment the line below:
-# library.json
