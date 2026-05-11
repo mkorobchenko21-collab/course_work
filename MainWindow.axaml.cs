@@ -52,10 +52,81 @@ namespace FlashcardsApp
             _folders = folders;
             _standaloneDecks = standalone;
 
+            SortLibrary();
+
             _recentDecks = _folders.SelectMany(f => f.Decks).Concat(_standaloneDecks).Take(5).ToList();
             RecentDecksListBox.ItemsSource = _recentDecks;
 
             RefreshSidebar();
+        }
+
+        private void SortLibrary()
+        {
+            _folders.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.OrdinalIgnoreCase));
+            _standaloneDecks.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.OrdinalIgnoreCase));
+            foreach (var folder in _folders)
+            {
+                folder.Decks.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.OrdinalIgnoreCase));
+            }
+        }
+
+        /// <summary>
+        /// Performs a binary search to find the first index of a deck starting with the prefix.
+        /// </summary>
+        private int BinarySearchFirstMatch(List<Deck> decks, string prefix)
+        {
+            int low = 0;
+            int high = decks.Count - 1;
+            int result = -1;
+
+            while (low <= high)
+            {
+                int mid = low + (high - low) / 2;
+                int compare = string.Compare(decks[mid].Name, 0, prefix, 0, prefix.Length, StringComparison.OrdinalIgnoreCase);
+
+                if (compare >= 0)
+                {
+                    if (decks[mid].Name.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                        result = mid;
+                    high = mid - 1;
+                }
+                else
+                {
+                    low = mid + 1;
+                }
+            }
+            return result;
+        }
+
+        private List<Deck> GetMatchingDecks(List<Deck> decks, string searchText)
+        {
+            if (string.IsNullOrWhiteSpace(searchText)) return decks.ToList();
+
+            // Optimization: Use binary search to find the start of prefix matches
+            int startIndex = BinarySearchFirstMatch(decks, searchText);
+            if (startIndex == -1) 
+            {
+                // Fallback to linear search for substring matches (not just prefixes)
+                return decks.Where(d => d.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+
+            // If we found a prefix match, we collect all consecutive prefix matches
+            var results = new List<Deck>();
+            for (int i = startIndex; i < decks.Count; i++)
+            {
+                if (decks[i].Name.StartsWith(searchText, StringComparison.OrdinalIgnoreCase))
+                {
+                    results.Add(decks[i]);
+                }
+                else break;
+            }
+
+            // Also include non-prefix substring matches that might have been skipped
+            var substringMatches = decks.Where(d => !d.Name.StartsWith(searchText, StringComparison.OrdinalIgnoreCase) 
+                                               && d.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase));
+            results.AddRange(substringMatches);
+            
+            return results.OrderBy(d => d.Name).ToList();
         }
 
         private void ShowPanel(Control active)
@@ -78,11 +149,42 @@ namespace FlashcardsApp
         private void BackToDeck_Click(object sender, RoutedEventArgs e) => UpdateDeckInfo();
 
         // --- SIDEBAR ---
+        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            RefreshSidebar();
+        }
+
         private void RefreshSidebar()
         {
+            string searchText = SearchTextBox?.Text ?? "";
             var rootItems = new List<object>();
-            rootItems.AddRange(_standaloneDecks);
-            rootItems.AddRange(_folders);
+
+            if (string.IsNullOrWhiteSpace(searchText))
+            {
+                rootItems.AddRange(_standaloneDecks);
+                rootItems.AddRange(_folders);
+            }
+            else
+            {
+                // Filter standalone decks using optimized search
+                rootItems.AddRange(GetMatchingDecks(_standaloneDecks, searchText));
+
+                // Filter folders and their decks
+                foreach (var folder in _folders)
+                {
+                    var matchingDecks = GetMatchingDecks(folder.Decks, searchText);
+                    if (matchingDecks.Count > 0)
+                    {
+                        // Create a temporary folder for display to avoid mutating the original
+                        var filteredFolder = new Folder(folder.Name)
+                        {
+                            Decks = matchingDecks
+                        };
+                        rootItems.Add(filteredFolder);
+                    }
+                }
+            }
+
             LibraryTreeView.ItemsSource = rootItems;
         }
 
@@ -219,6 +321,7 @@ namespace FlashcardsApp
         {
             if (string.IsNullOrWhiteSpace(NewItemNameInput.Text)) return;
             _folders.Add(new Folder(NewItemNameInput.Text));
+            SortLibrary();
             NewItemNameInput.Text = "";
             RefreshSidebar();
             SaveLibraryToFile();
@@ -230,6 +333,7 @@ namespace FlashcardsApp
             var newDeck = new Deck(NewItemNameInput.Text);
             if (LibraryTreeView.SelectedItem is Folder folder) folder.AddDeck(newDeck);
             else _standaloneDecks.Add(newDeck);
+            SortLibrary();
             NewItemNameInput.Text = "";
             RefreshSidebar();
             SaveLibraryToFile();

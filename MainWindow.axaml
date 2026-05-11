@@ -26,6 +26,7 @@
             <Border Grid.Column="0" Background="#F4F4F4" BorderBrush="#DDD" BorderThickness="0,0,1,0" Padding="15">
                 <DockPanel>
                     <Button Content="Save and Exit" Click="Quit_Click" Background="#E74C3C" Foreground="White" FontWeight="Bold" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,0,0,15" DockPanel.Dock="Top"/>
+                    <TextBox x:Name="SearchTextBox" PlaceholderText="Search decks..." TextChanged="SearchTextBox_TextChanged" DockPanel.Dock="Top" Margin="0,0,0,10"/>
                     <TextBlock Text="LIBRARY" FontWeight="ExtraBold" FontSize="14" Foreground="#777" DockPanel.Dock="Top" Margin="0,0,0,10"/>
                     
                     <StackPanel DockPanel.Dock="Bottom" Spacing="8" Margin="0,15,0,0">
