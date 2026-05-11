@@ -48,16 +48,29 @@ namespace FlashcardsApp
 
         private void LoadApplicationData()
         {
-            var (folders, standalone) = _storage.LoadLibrary("library.json");
-            _folders = folders;
-            _standaloneDecks = standalone;
+            try
+            {
+                var (folders, standalone) = _storage.LoadLibrary("library.json");
+                _folders = folders;
+                _standaloneDecks = standalone;
 
-            SortLibrary();
+                SortLibrary();
 
-            _recentDecks = _folders.SelectMany(f => f.Decks).Concat(_standaloneDecks).Take(5).ToList();
-            RecentDecksListBox.ItemsSource = _recentDecks;
+                _recentDecks = _folders.SelectMany(f => f.Decks).Concat(_standaloneDecks).Take(5).ToList();
+                RecentDecksListBox.ItemsSource = _recentDecks;
 
-            RefreshSidebar();
+                RefreshSidebar();
+            }
+            catch (JsonException)
+            {
+                _folders = new List<Folder>();
+                _standaloneDecks = new List<Deck>();
+                
+                // Show critical error message to user - persistent
+                Dispatcher.UIThread.Post(() => {
+                    ShowCriticalError("CRITICAL: 'library.json' is corrupted! Fix it manually or delete it to start fresh.");
+                });
+            }
         }
 
         private void SortLibrary()
@@ -235,18 +248,29 @@ namespace FlashcardsApp
             }
         }
 
+        private bool _isCriticalErrorShowing = false;
+
         private void ShowQuickEditError(string message)
         {
+            if (_isCriticalErrorShowing) return;
+
             ErrorMessageText.Text = message;
             ErrorBanner.IsVisible = true;
 
             var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(3) };
             timer.Tick += (s, e) =>
             {
-                ErrorBanner.IsVisible = false;
+                if (!_isCriticalErrorShowing) ErrorBanner.IsVisible = false;
                 timer.Stop();
             };
             timer.Start();
+        }
+
+        private void ShowCriticalError(string message)
+        {
+            _isCriticalErrorShowing = true;
+            ErrorMessageText.Text = message;
+            ErrorBanner.IsVisible = true;
         }
 
         private void SaveQuickEdit_Click(object sender, RoutedEventArgs e)
@@ -283,13 +307,22 @@ namespace FlashcardsApp
         {
             if (string.IsNullOrWhiteSpace(NewItemNameInput.Text)) return;
             
-            if (NewItemNameInput.Text.Length > Folder.MaxNameLength)
+            string newName = NewItemNameInput.Text.Trim();
+
+            if (newName.Length > Folder.MaxNameLength)
             {
                 ShowQuickEditError($"Folder name cannot exceed {Folder.MaxNameLength} characters!");
                 return;
             }
 
-            _folders.Add(new Folder(NewItemNameInput.Text));
+            // Check for duplicate folder names
+            if (_folders.Any(f => string.Equals(f.Name, newName, StringComparison.OrdinalIgnoreCase)))
+            {
+                ShowQuickEditError($"A folder named '{newName}' already exists!");
+                return;
+            }
+
+            _folders.Add(new Folder(newName));
             SortLibrary();
             NewItemNameInput.Text = "";
             RefreshSidebar();

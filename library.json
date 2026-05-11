@@ -1,26 +1,23 @@
 {
   "Folders": [
     {
-      "Name": "English",
+      "Name": "sadfsadf",
       "Decks": [
         {
-          "Name": "basic",
-          "Cards": [
-            {
-              "Term": "fsadfasdfffffffffffffffffsadfasdfffffffffsadfffffffffsadfasdfffffffffffffffffsadfasdffffffffffffffff",
-              "Definition": "fsadfasdffffffffffffffff",
-              "IsLearned": false
-            }
-          ],
-          "TotalCards": 1,
+          "Name": "sadfsdaf",
+          "Cards": [],
+          "TotalCards": 0,
           "LearnedCards": 0
         }
       ]
-    },
-    {
-      "Name": "sadf",
-      "Decks": []
     }
   ],
-  "StandaloneDecks": []
+  "StandaloneDecks": [
+    {
+      "Name": "safdsa",
+      "Cards": [],
+      "TotalCards": 0,
+      "LearnedCards": 0
+    }
+  ]
 }

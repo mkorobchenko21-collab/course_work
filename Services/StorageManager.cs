@@ -50,16 +50,16 @@ namespace FlashcardsApp.Services
                 return (new List<Folder>(), new List<Deck>());
             }
 
+            string jsonString = File.ReadAllText(filePath);
             try
             {
-                string jsonString = File.ReadAllText(filePath);
                 var data = JsonSerializer.Deserialize<LibraryData>(jsonString, _jsonOptions);
                 return (data?.Folders ?? new List<Folder>(), data?.StandaloneDecks ?? new List<Deck>());
             }
-            catch (JsonException)
+            catch (JsonException ex)
             {
-                // Return empty if format is old or invalid to prevent startup crash
-                return (new List<Folder>(), new List<Deck>());
+                // Rethrow to be handled by the UI layer
+                throw new JsonException($"Failed to parse library file: {ex.Message}", ex);
             }
         }
 
