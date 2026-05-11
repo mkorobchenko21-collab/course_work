@@ -25,7 +25,7 @@
             <!-- Left: Library Management (Sidebar) -->
             <Border Grid.Column="0" Background="#F4F4F4" BorderBrush="#DDD" BorderThickness="0,0,1,0" Padding="15">
                 <DockPanel>
-                    <Button Content="Exit Application" Click="Quit_Click" Background="#E74C3C" Foreground="White" FontWeight="Bold" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,0,0,15" DockPanel.Dock="Top"/>
+                    <Button Content="Save and Exit" Click="Quit_Click" Background="#E74C3C" Foreground="White" FontWeight="Bold" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Margin="0,0,0,15" DockPanel.Dock="Top"/>
                     <TextBlock Text="LIBRARY" FontWeight="ExtraBold" FontSize="14" Foreground="#777" DockPanel.Dock="Top" Margin="0,0,0,10"/>
                     
                     <StackPanel DockPanel.Dock="Bottom" Spacing="8" Margin="0,15,0,0">
@@ -173,8 +173,20 @@
                         <TextBox x:Name="QuizAnswerInput" Height="45" FontSize="18" PlaceholderText="Type definition here..."/>
                     </StackPanel>
                     
-                    <Button Content="SUBMIT ANSWER" HorizontalAlignment="Center" Click="SubmitQuiz_Click" Width="200" Height="50" Background="#2980B9" Foreground="White" FontWeight="Bold" CornerRadius="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-                    <TextBlock x:Name="QuizFeedbackText" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                    <Button x:Name="SubmitAnswerButton" Content="SUBMIT ANSWER" HorizontalAlignment="Center" Click="SubmitQuiz_Click" Width="200" Height="50" Background="#2980B9" Foreground="White" FontWeight="Bold" CornerRadius="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    
+                    <StackPanel x:Name="QuizFeedbackContainer" IsVisible="False" Spacing="20">
+                        <TextBlock x:Name="QuizFeedbackText" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Center" TextWrapping="Wrap" MaxWidth="600" TextAlignment="Center"/>
+                        
+                        <StackPanel x:Name="CorrectControls" IsVisible="False" HorizontalAlignment="Center">
+                            <Button Content="Next card" Click="QuizNext_Click" Width="200" Height="50" Background="#2ECC71" Foreground="White" FontWeight="Bold" CornerRadius="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                        </StackPanel>
+                        
+                        <StackPanel x:Name="WrongControls" IsVisible="False" Orientation="Horizontal" Spacing="15" HorizontalAlignment="Center">
+                            <Button Content="rewrite definition" Click="QuizRewrite_Click" Width="180" Height="50" Background="#F39C12" Foreground="White" FontWeight="Bold" CornerRadius="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                            <Button Content="go next card" Click="QuizNext_Click" Width="180" Height="50" Background="#95A5A6" Foreground="White" FontWeight="Bold" CornerRadius="25" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                        </StackPanel>
+                    </StackPanel>
                 </StackPanel>
 
                 <!-- Panel 5: Edit Mode (Full) -->

@@ -352,21 +352,51 @@ namespace FlashcardsApp
             _currentCard = _selectedDeck.Cards[_quizIndex];
             QuizQuestionText.Text = _currentCard.Term;
             QuizAnswerInput.Text = "";
-            QuizFeedbackText.Text = "";
+            QuizAnswerInput.IsEnabled = true;
+            SubmitAnswerButton.IsVisible = true;
+            QuizFeedbackContainer.IsVisible = false;
         }
 
-        private async void SubmitQuiz_Click(object sender, RoutedEventArgs e)
+        private void SubmitQuiz_Click(object sender, RoutedEventArgs e)
         {
             if (_quizSession != null && _currentCard != null)
             {
                 bool ok = _quizSession.CheckAnswer(_currentCard, QuizAnswerInput.Text ?? "");
-                QuizFeedbackText.Text = ok ? "Correct!" : "Wrong! Correct answer: " + _currentCard.Definition;
-                QuizFeedbackText.Foreground = ok ? Brushes.Green : Brushes.Red;
-                _quizIndex++;
+                
+                QuizAnswerInput.IsEnabled = false;
+                SubmitAnswerButton.IsVisible = false;
+                QuizFeedbackContainer.IsVisible = true;
 
-                await Task.Delay(1500);
-                NextQuiz();
+                if (ok)
+                {
+                    QuizFeedbackText.Text = "Correct!";
+                    QuizFeedbackText.Foreground = Brushes.Green;
+                    CorrectControls.IsVisible = true;
+                    WrongControls.IsVisible = false;
+                }
+                else
+                {
+                    QuizFeedbackText.Text = "Wrong: the correct " + _currentCard.Definition;
+                    QuizFeedbackText.Foreground = Brushes.Red;
+                    CorrectControls.IsVisible = false;
+                    WrongControls.IsVisible = true;
+                }
             }
+        }
+
+        private void QuizNext_Click(object sender, RoutedEventArgs e)
+        {
+            _quizIndex++;
+            NextQuiz();
+        }
+
+        private void QuizRewrite_Click(object sender, RoutedEventArgs e)
+        {
+            QuizAnswerInput.Text = "";
+            QuizAnswerInput.IsEnabled = true;
+            SubmitAnswerButton.IsVisible = true;
+            QuizFeedbackContainer.IsVisible = false;
+            QuizAnswerInput.Focus();
         }
 
         // --- EDIT MODE ---
