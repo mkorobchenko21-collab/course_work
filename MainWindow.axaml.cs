@@ -70,65 +70,6 @@ namespace FlashcardsApp
             }
         }
 
-        /// <summary>
-        /// Performs a binary search to find the first index of a deck starting with the prefix.
-        /// </summary>
-        private int BinarySearchFirstMatch(List<Deck> decks, string prefix)
-        {
-            int low = 0;
-            int high = decks.Count - 1;
-            int result = -1;
-
-            while (low <= high)
-            {
-                int mid = low + (high - low) / 2;
-                int compare = string.Compare(decks[mid].Name, 0, prefix, 0, prefix.Length, StringComparison.OrdinalIgnoreCase);
-
-                if (compare >= 0)
-                {
-                    if (decks[mid].Name.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
-                        result = mid;
-                    high = mid - 1;
-                }
-                else
-                {
-                    low = mid + 1;
-                }
-            }
-            return result;
-        }
-
-        private List<Deck> GetMatchingDecks(List<Deck> decks, string searchText)
-        {
-            if (string.IsNullOrWhiteSpace(searchText)) return decks.ToList();
-
-            // Optimization: Use binary search to find the start of prefix matches
-            int startIndex = BinarySearchFirstMatch(decks, searchText);
-            if (startIndex == -1) 
-            {
-                // Fallback to linear search for substring matches (not just prefixes)
-                return decks.Where(d => d.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase)).ToList();
-            }
-
-            // If we found a prefix match, we collect all consecutive prefix matches
-            var results = new List<Deck>();
-            for (int i = startIndex; i < decks.Count; i++)
-            {
-                if (decks[i].Name.StartsWith(searchText, StringComparison.OrdinalIgnoreCase))
-                {
-                    results.Add(decks[i]);
-                }
-                else break;
-            }
-
-            // Also include non-prefix substring matches that might have been skipped
-            var substringMatches = decks.Where(d => !d.Name.StartsWith(searchText, StringComparison.OrdinalIgnoreCase) 
-                                               && d.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase));
-            results.AddRange(substringMatches);
-            
-            return results.OrderBy(d => d.Name).ToList();
-        }
-
         private void ShowPanel(Control active)
         {
             WelcomePanel.IsVisible = active == WelcomePanel;
@@ -166,13 +107,13 @@ namespace FlashcardsApp
             }
             else
             {
-                // Filter standalone decks using optimized search
-                rootItems.AddRange(GetMatchingDecks(_standaloneDecks, searchText));
+                // Filter standalone decks using linear search
+                rootItems.AddRange(_standaloneDecks.Where(d => d.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase)));
 
                 // Filter folders and their decks
                 foreach (var folder in _folders)
                 {
-                    var matchingDecks = GetMatchingDecks(folder.Decks, searchText);
+                    var matchingDecks = folder.Decks.Where(d => d.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase)).ToList();
                     if (matchingDecks.Count > 0)
                     {
                         // Create a temporary folder for display to avoid mutating the original
