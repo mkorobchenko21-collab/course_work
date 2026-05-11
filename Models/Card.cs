@@ -5,15 +5,37 @@ namespace FlashcardsApp.Models
     /// </summary>
     public class Card
     {
+        public const int MaxTextLength = 200;
+        private string _term;
+        private string _definition;
+
         /// <summary>
         /// Gets or sets the term or question on the front side of the card.
         /// </summary>
-        public string Term { get; set; }
+        public string Term
+        {
+            get => _term;
+            set
+            {
+                if (value?.Length > MaxTextLength)
+                    throw new System.ArgumentException($"Term cannot exceed {MaxTextLength} characters.");
+                _term = value ?? "";
+            }
+        }
 
         /// <summary>
         /// Gets or sets the definition or answer on the back side of the card.
         /// </summary>
-        public string Definition { get; set; }
+        public string Definition
+        {
+            get => _definition;
+            set
+            {
+                if (value?.Length > MaxTextLength)
+                    throw new System.ArgumentException($"Definition cannot exceed {MaxTextLength} characters.");
+                _definition = value ?? "";
+            }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether the card has been mastered by the user.

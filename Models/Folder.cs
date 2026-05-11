@@ -8,17 +8,20 @@ namespace FlashcardsApp.Models
     /// </summary>
     public class Folder
     {
+        public const int MaxNameLength = 30;
         private string _name = null!; // _name != null
         /// <summary>
         /// Gets or sets the name of the folder.
         /// </summary>
-        /// <exception cref="ArgumentException">Thrown when the value is null or whitespace.</exception>
+        /// <exception cref="ArgumentException">Thrown when the value is null or whitespace, or exceeds MaxNameLength.</exception>
         public string Name
         {
             get => _name;
             set
             {
                 ArgumentException.ThrowIfNullOrWhiteSpace(value, nameof(value));
+                if (value.Length > MaxNameLength)
+                    throw new ArgumentException($"Name cannot exceed {MaxNameLength} characters.", nameof(value));
                 _name = value;
             }
         }

@@ -235,13 +235,34 @@ namespace FlashcardsApp
             }
         }
 
+        private void ShowQuickEditError(string message)
+        {
+            ErrorMessageText.Text = message;
+            ErrorBanner.IsVisible = true;
+
+            var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(3) };
+            timer.Tick += (s, e) =>
+            {
+                ErrorBanner.IsVisible = false;
+                timer.Stop();
+            };
+            timer.Start();
+        }
+
         private void SaveQuickEdit_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button btn && btn.DataContext is Card card)
             {
+                if (string.IsNullOrWhiteSpace(card.Term) || string.IsNullOrWhiteSpace(card.Definition))
+                {
+                    ShowQuickEditError("Term and Definition cannot be empty!");
+                    return;
+                }
+
                 // Since Card doesn't implement INotifyPropertyChanged, 
                 // we refresh the entire deck info to update all UI bindings (List and Carousel).
                 UpdateDeckInfo();
+                SaveLibraryToFile();
             }
         }
 
@@ -261,6 +282,13 @@ namespace FlashcardsApp
         private void AddFolder_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(NewItemNameInput.Text)) return;
+            
+            if (NewItemNameInput.Text.Length > Folder.MaxNameLength)
+            {
+                ShowQuickEditError($"Folder name cannot exceed {Folder.MaxNameLength} characters!");
+                return;
+            }
+
             _folders.Add(new Folder(NewItemNameInput.Text));
             SortLibrary();
             NewItemNameInput.Text = "";
@@ -271,6 +299,13 @@ namespace FlashcardsApp
         private void AddDeck_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(NewItemNameInput.Text)) return;
+
+            if (NewItemNameInput.Text.Length > Deck.MaxNameLength)
+            {
+                ShowQuickEditError($"Deck name cannot exceed {Deck.MaxNameLength} characters!");
+                return;
+            }
+
             var newDeck = new Deck(NewItemNameInput.Text);
             if (LibraryTreeView.SelectedItem is Folder folder) folder.AddDeck(newDeck);
             else _standaloneDecks.Add(newDeck);
@@ -463,6 +498,12 @@ namespace FlashcardsApp
         private void SaveEditChanges_Click(object sender, RoutedEventArgs e)
         {
             if (_selectedDeck == null) return;
+
+            if (_editCards.Any(c => string.IsNullOrWhiteSpace(c.Term) || string.IsNullOrWhiteSpace(c.Definition)))
+            {
+                ShowQuickEditError("All cards must have a Term and a Definition!");
+                return;
+            }
 
             // Sync changes back to the original deck
             _selectedDeck.Cards.Clear();
