@@ -3,76 +3,105 @@ skinparam classAttributeIconSize 0
 
 ' --- Models ---
 class Card {
-    + String Term
-    + String Definition
-    + Boolean IsLearned
+    + Term : String
+    + Definition : String
+    + IsLearned : Boolean
+    + Card(term: String, definition: String)
 }
 
 class Deck {
-    + String Name
-    + List<Card> Cards
-    + Int TotalCards
-    + Int LearnedCards
-    + void AddCard(Card card)
-    + void RemoveCard(Card card)
-    + void EditCard(Card oldCard, Card newCard)
-    + void Shuffle()
+    + Name : String
+    + Cards : List<Card>
+    + TotalCards : Int
+    + LearnedCards : Int
+    + Deck(name: String)
+    + AddCard(card: Card) : void
+    + RemoveCard(card: Card) : void
+    + EditCard(oldCard: Card, newCard: Card) : void
+    + Shuffle() : void
 }
 
 class Folder {
-    + String Name
-    + List<Deck> Decks
-    + void AddDeck(Deck deck)
-    + void RemoveDeck(Deck deck)
+    + Name : String
+    + Decks : List<Deck>
+    + Folder(name: String)
+    + AddDeck(deck: Deck) : void
+    + RemoveDeck(deck: Deck) : void
 }
 
 ' --- Services ---
 interface IStorageManager {
-    + void SaveLibrary(List<Folder> folders, String destinationPath)
-    + List<Folder> LoadLibrary(String sourcePath)
-    + void ExportDeck(Deck deck, String destinationPath)
-    + Deck ImportDeck(String sourcePath)
-    + Deck ParseDeckFromString(String rawText, String termSeparator, String cardSeparator)
-    + String FormatDeckToString(Deck deck, String termSeparator, String cardSeparator)
+    + SaveLibrary(folders: List<Folder>, standaloneDecks: List<Deck>, destinationPath: String) : void
+    + LoadLibrary(sourcePath: String) : Tuple<List<Folder>, List<Deck>>
+    + ExportDeck(deck: Deck, destinationPath: String) : void
+    + ImportDeck(sourcePath: String) : Deck
+    + ParseDeckFromString(rawText: String, termSeparator: String, cardSeparator: String) : Deck
+    + FormatDeckToString(deck: Deck, termSeparator: String, cardSeparator: String) : String
 }
 
 class StorageManager {
-    - JsonSerializerOptions _jsonOptions
-    + void SaveLibrary(List<Folder> folders, String destinationPath)
-    + List<Folder> LoadLibrary(String sourcePath)
-    + void ExportDeck(Deck deck, String destinationPath)
-    + Deck ImportDeck(String sourcePath)
-    + Deck ParseDeckFromString(String rawText, String termSeparator, String cardSeparator)
-    + String FormatDeckToString(Deck deck, String termSeparator, String cardSeparator)
+    - _jsonOptions : JsonSerializerOptions
+    + SaveLibrary(folders: List<Folder>, standaloneDecks: List<Deck>, destinationPath: String) : void
+    + LoadLibrary(sourcePath: String) : Tuple<List<Folder>, List<Deck>>
+    + ExportDeck(deck: Deck, destinationPath: String) : void
+    + ImportDeck(sourcePath: String) : Deck
+    + ParseDeckFromString(rawText: String, termSeparator: String, cardSeparator: String) : Deck
+    + FormatDeckToString(deck: Deck, termSeparator: String, cardSeparator: String) : String
 }
 
 ' --- Logic ---
 class StudySession {
-    - Deck currentDeck
-    - List<Card> sessionCards
-    + Card GetNextCard()
-    + void SwipeLeft(Card card)
-    + void SwipeRight(Card card)
+    - _currentDeck : Deck
+    - _sessionQueueCards : Queue<Card>
+    + StudySession(deck: Deck)
+    + GetNextCard() : Card?
+    + SwipeLeft(card: Card) : void
+    + SwipeRight(card: Card) : void
 }
 
 class QuizSession {
-    - Deck currentDeck
-    - int correctAnswers
-    - int totalQuestions
-    + void GenerateQuiz()
-    + Boolean CheckAnswer(Card card, String answer)
-    + String CalculateResults()
+    - _currentDeck : Deck
+    - _correctAnswers : int
+    - _totalQuestions : int
+    + QuizSession(deck: Deck)
+    + GenerateQuiz(shuffle: bool) : void
+    + CheckAnswer(card: Card, answer: String) : Boolean
+    + CalculateResults() : String
 }
 
 ' --- UI ---
 class MainWindow {
-    - Deck? _selectedDeck
-    - StudySession? _studySession
-    - QuizSession? _quizSession
-    - IStorageManager _storage
+    - _folders : List<Folder>
+    - _standaloneDecks : List<Deck>
+    - _recentDecks : List<Deck>
+    - _storage : IStorageManager
+    - _selectedDeck : Deck?
+    - _studySession : StudySession?
+    - _quizSession : QuizSession?
+    - _currentCard : Card?
+    - _editCards : ObservableCollection<Card>
     + MainWindow()
-    - ShowPanel(Control panelToShow)
-    - PopulateSidebar()
+    - LoadApplicationData() : void
+    - SortLibrary() : void
+    - ShowPanel(active: Control) : void
+    - RefreshSidebar() : void
+    - UpdateDeckInfo() : void
+    - SearchTextBox_TextChanged(sender: object, e: TextChangedEventArgs) : void
+    - LibraryTreeView_SelectionChanged(sender: object, e: SelectionChangedEventArgs) : void
+    - StartStudy_Click(sender: object, e: RoutedEventArgs) : void
+    - StartQuiz_Click(sender: object, e: RoutedEventArgs) : void
+    - StartEdit_Click(sender: object, e: RoutedEventArgs) : void
+    - ToggleExchangePanel_Click(sender: object, e: RoutedEventArgs) : void
+}
+
+class ImportExportWindow {
+    - _deck : Deck
+    - _storage : IStorageManager
+    + ImportExportWindow(deck: Deck, storage: IStorageManager)
+    - ExportToText_Click(sender: object, e: RoutedEventArgs) : void
+    - ImportFromText_Click(sender: object, e: RoutedEventArgs) : void
+    - ExportToJson_Click(sender: object, e: RoutedEventArgs) : void
+    - ImportFromJson_Click(sender: object, e: RoutedEventArgs) : void
 }
 
 ' --- Relationships ---
@@ -81,15 +110,20 @@ Deck "1" *-- "*" Card : contains
 
 IStorageManager <|.. StorageManager : implements
 IStorageManager ..> Folder : serializes
-IStorageManager ..> Deck : imports/exports
+IStorageManager ..> Deck : serializes
 
-StudySession --> Deck : uses
-QuizSession --> Deck : uses
+StudySession --> Deck : manages
+QuizSession --> Deck : tests
 
-' UI Dependencies (MainWindow is the entry point orchestrating everything)
-MainWindow --> IStorageManager : depends on
+' UI Dependencies
+MainWindow --> IStorageManager : uses
 MainWindow --> StudySession : creates/uses
 MainWindow --> QuizSession : creates/uses
-MainWindow --> Deck : displays
+MainWindow --> Deck : displays/manages
+MainWindow --> Folder : displays/manages
+MainWindow ..> ImportExportWindow : opens
+
+ImportExportWindow --> IStorageManager : uses
+ImportExportWindow --> Deck : modifies
 
 @enduml
