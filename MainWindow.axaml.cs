@@ -345,13 +345,32 @@ namespace FlashcardsApp
         {
             if (string.IsNullOrWhiteSpace(NewItemNameInput.Text)) return;
 
-            if (NewItemNameInput.Text.Length > Deck.MaxNameLength)
+            string newName = NewItemNameInput.Text.Trim();
+
+            if (newName.Length > Deck.MaxNameLength)
             {
                 ShowQuickEditError($"Deck name cannot exceed {Deck.MaxNameLength} characters!");
                 return;
             }
 
-            var newDeck = new Deck(NewItemNameInput.Text);
+            // Local uniqueness check (like in a file system)
+            bool exists = false;
+            if (LibraryTreeView.SelectedItem is Folder targetFolder)
+            {
+                exists = targetFolder.Decks.Any(d => string.Equals(d.Name, newName, StringComparison.OrdinalIgnoreCase));
+            }
+            else
+            {
+                exists = _standaloneDecks.Any(d => string.Equals(d.Name, newName, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (exists)
+            {
+                ShowQuickEditError($"A deck named '{newName}' already exists in this location!");
+                return;
+            }
+
+            var newDeck = new Deck(newName);
             if (LibraryTreeView.SelectedItem is Folder folder) folder.AddDeck(newDeck);
             else _standaloneDecks.Add(newDeck);
             SortLibrary();
