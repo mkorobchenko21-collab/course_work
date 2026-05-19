@@ -24,16 +24,12 @@ namespace FlashcardsApp.Logic
         }
 
         /// <summary>
-        /// Prepares the quiz by resetting scores and shuffling the deck.
+        /// Prepares the quiz by resetting scores.
         /// </summary>
-        public void GenerateQuiz(bool shuffle = false)
+        public void GenerateQuiz()
         {
             _correctAnswers = 0;
             _totalQuestions = _currentDeck.TotalCards;
-            if (shuffle)
-            {
-                _currentDeck.Shuffle();
-            }
         }
 
         /// <summary>

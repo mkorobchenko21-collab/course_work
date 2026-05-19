@@ -10,8 +10,13 @@ namespace FlashcardsApp
 {
     public partial class ImportExportWindow : Window
     {
-        private readonly Deck _deck;
-        private readonly IStorageManager _storage;
+        private Deck _deck = null!;
+        private IStorageManager _storage = null!;
+
+        public ImportExportWindow()
+        {
+            InitializeComponent();
+        }
 
         public ImportExportWindow(Deck deck, IStorageManager storage)
         {

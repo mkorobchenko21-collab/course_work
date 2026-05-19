@@ -224,6 +224,18 @@ namespace FlashcardsApp
             UpdateCarouselUI();
         }
 
+        private void Shuffle_Click(object sender, RoutedEventArgs e)
+        {
+            if (_selectedDeck == null || _selectedDeck.TotalCards < 2) return;
+
+            _selectedDeck.Shuffle();
+            _carouselIndex = 0;
+            _carouselFlipped = false;
+            
+            UpdateDeckInfo();
+            SaveLibraryToFile();
+        }
+
         // --- QUICK EDIT LOGIC ---
         private void ToggleQuickEdit_Click(object sender, RoutedEventArgs e)
         {
@@ -447,7 +459,7 @@ namespace FlashcardsApp
             if (_selectedDeck?.TotalCards > 0)
             {
                 _quizSession = new QuizSession(_selectedDeck);
-                _quizSession.GenerateQuiz(true);
+                _quizSession.GenerateQuiz();
                 _quizIndex = 0;
                 ShowPanel(QuizPanel);
                 NextQuiz();

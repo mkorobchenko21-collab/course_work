@@ -6,8 +6,8 @@ namespace FlashcardsApp.Models
     public class Card
     {
         public const int MaxTextLength = 200;
-        private string _term;
-        private string _definition;
+        private string _term = null!;
+        private string _definition = null!;
 
         /// <summary>
         /// Gets or sets the term or question on the front side of the card.
