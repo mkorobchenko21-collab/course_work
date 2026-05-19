@@ -20,3 +20,5 @@ Thumbs.db
 
 # --- Crash Dumps (Important!) ---
 core.*
+
+Data/*
